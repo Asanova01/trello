@@ -1,0 +1,153 @@
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { authActions } from '../../store/auth-slice'
+import Register from './Register'
+import { createGlobalStyle } from 'styled-components'
+
+const LoginPage = () => {
+	const navigate = useNavigate()
+	const dispatch = useDispatch()
+	const isAuth = useSelector((state) => state.auth.authentication)
+	const [enteredValuesTouched, setEnteredValuesTouched] = useState(false)
+	const [values, setValues] = useState({
+		email: '',
+		password: '',
+	})
+
+	const enteredValuesIsValid = values.email !== '' && values.password !== ''
+	const valuesIsInValid = !enteredValuesIsValid && enteredValuesTouched
+
+	const valuesChangeHandler = (e) => {
+		setValues({
+			...values,
+			[e.target.name]: e.target.value,
+		})
+	}
+
+	const submitHandler = (e) => {
+		e.preventDefault()
+		if (enteredValuesIsValid) {
+			dispatch(
+				authActions.login({
+					...values,
+				}),
+			)
+		}
+		if (isAuth) {
+			navigate('/TodoList')
+		}
+		setEnteredValuesTouched(true)
+	}
+
+	return (
+		<>
+			<GlobalStyle />
+			<Logo>
+				<img
+					src='https://d2k1ftgv7pobq7.cloudfront.net/meta/c/p/res/images/trello-header-logos/167dc7b9900a5b241b15ba21f8037cf8/trello-logo-blue.svg'
+					alt='trello-logo'
+				/>
+			</Logo>
+			<Form>
+				{valuesIsInValid ? (
+					<p className='message'>Поле не должнo быть пустым</p>
+				) : (
+					''
+				)}
+				<h1>Вход в Trello</h1>
+				<input
+					onChange={valuesChangeHandler}
+					value={values.email}
+					type='email'
+					name='email'
+					placeholder='Укажите адрес электронной почты'
+				/>
+				<input
+					onChange={valuesChangeHandler}
+					value={values.password}
+					type='password'
+					name='password'
+					placeholder='Введите пароль'
+				/>
+				<button onClick={submitHandler}>Войти</button>
+				<p>ИЛИ</p>
+				<Register />
+			</Form>
+		</>
+	)
+}
+
+export const GlobalStyle = createGlobalStyle`
+body{
+	background: linear-gradient(#c6e4ee 0%, #c6e4ee 40%, #fed1ae 60%, #faa0b9 70%, #cb7dcb 80%, #757ecb 100%);
+	background-repeat: no-repeat;
+    background-size: cover;
+	background-attachment: fixed;
+}
+`
+const Logo = styled.div`
+	img {
+		display: block;
+		height: 43px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 40px;
+		margin-bottom: 40px;
+	}
+	h1 {
+		color: rgb(79, 79, 112);
+	}
+`
+const Form = styled.div`
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	max-width: 450px;
+	background-color: white;
+	border-radius: 5px;
+	box-shadow: rgb(0 0 0 / 10%) 0 0 10px;
+	.message {
+		background-color: tomato;
+		width: 300px;
+		height: 40px;
+		color: white;
+		border-radius: 5px;
+		padding: 7px;
+	}
+	input {
+		padding: 10px;
+		width: 350px;
+		height: 44px;
+		margin: 0 0 1.2em;
+		border-radius: 4px;
+		font-size: 15px;
+		border: 2px solid #dfe1e6;
+		background-color: #fafbfc;
+	}
+	input:focus {
+		outline-color: hsl(202, 92%, 85%);
+	}
+	button {
+		width: 350px;
+		border: 0px;
+		height: 37px;
+		margin: 0 0 1.2em;
+		border-radius: 5px;
+		font-weight: bold;
+		color: white;
+		background: #5aac44;
+	}
+	h1 {
+		margin: 27px;
+		font-weight: bold;
+		color: #5e6c84;
+		font-size: 16px;
+	}
+`
+
+
+export default LoginPage
