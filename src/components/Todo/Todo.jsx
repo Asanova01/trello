@@ -3,12 +3,24 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { addTodo } from '../../store/todos-slice'
 import image from '../../image/delete.png'
-
+import { useCallbackPrompt } from '../../hooks/useCallbackPrompt'
+import { DialogPrompt } from '../Layout/DialogPrompt'
 
 const Todo = () => {
 	const dispath = useDispatch()
 	const [value, setValue] = useState('')
 	const [showTodo, setShowTodo] = useState(false)
+
+	const [canShowDialogLevaingPage, setCanShowDialogLeavingPage] =
+		useState(false)
+	const [showPrompt, confirmNavigation, cancelNavigation] = useCallbackPrompt(
+		canShowDialogLevaingPage,
+	)
+
+	const inChangeHandler = (e) => {
+		setValue(e.target.value)
+		setCanShowDialogLeavingPage(true)
+	}
 
 	const onSubmit = (e) => {
 		e.preventDefault()
@@ -21,6 +33,7 @@ const Todo = () => {
 			dispath(addTodo(columnData))
 		}
 		setValue('')
+		setCanShowDialogLeavingPage(false)
 	}
 
 	const HidercartHandler = () => {
@@ -35,6 +48,11 @@ const Todo = () => {
 	return (
 		<>
 			<InputContainer>
+				<DialogPrompt
+  					showDialog={showPrompt}
+					confirmNavigation={confirmNavigation}
+					cancelNavigation={cancelNavigation}
+				/>
 				{showTodo ? (
 					<div className='caption'>
 						<div>
@@ -42,7 +60,7 @@ const Todo = () => {
 								placeholder='Ввести заголовок списка'
 								type='text'
 								value={value}
-								onChange={(e) => setValue(e.target.value)}
+								onChange={inChangeHandler}
 							/>
 						</div>
 						<div className='addcart'>
@@ -123,7 +141,7 @@ const InputContainer = styled.div`
 `
 const ToggleContainer = styled.div`
 	.addcolumn {
-		background-color: #787a7a;
+		background-color: rgb(95, 107, 121);
 		width: 340px;
 		height: 50px;
 		box-shadow: rgb(0 0 0 / 20%) 1px 4px 5px 2px;
@@ -132,6 +150,9 @@ const ToggleContainer = styled.div`
 		margin-top: -9px;
 		margin-left: 10px;
 		cursor: pointer;
+	}
+	&:hover{
+		opacity: 0.9;
 	}
 `
 export default Todo

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { authActions } from '../../store/auth-slice'
-import Register from './Register'
+import { authActions } from '../store/auth-slice'
+import Register from '../components/Layout/Register'
 import { createGlobalStyle } from 'styled-components'
 
 const LoginPage = () => {
@@ -36,7 +36,7 @@ const LoginPage = () => {
 			)
 		}
 		if (isAuth) {
-			navigate('/TodoList')
+			navigate('/home')
 		}
 		setEnteredValuesTouched(true)
 	}
@@ -44,6 +44,7 @@ const LoginPage = () => {
 	return (
 		<>
 			<GlobalStyle />
+
 			<Logo>
 				<img
 					src='https://d2k1ftgv7pobq7.cloudfront.net/meta/c/p/res/images/trello-header-logos/167dc7b9900a5b241b15ba21f8037cf8/trello-logo-blue.svg'
@@ -74,6 +75,14 @@ const LoginPage = () => {
 				<button onClick={submitHandler}>Войти</button>
 				<p>ИЛИ</p>
 				<Register />
+				<ul>
+					<li>
+						<a>Не удается войти?</a>
+					</li>
+					<li>
+						<a>Зарегистрировать аккаунт</a>
+					</li>
+				</ul>
 			</Form>
 		</>
 	)
@@ -146,6 +155,18 @@ const Form = styled.div`
 		font-weight: bold;
 		color: #5e6c84;
 		font-size: 16px;
+	}
+	ul {
+		text-align: center;
+		font-size: 14px;
+		display: block;
+		padding: 0;
+		color: #0052cc;
+	}
+	li {
+		display: inline-block;
+		list-style: none;
+		margin: 0 8px 0px 4px;
 	}
 `
 

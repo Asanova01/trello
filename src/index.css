@@ -8,10 +8,14 @@ body {
 		'Helvetica Neue', sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	
-	color: #525a69;
+		background: linear-gradient(90deg, #cfecd0, #a0cea7, #9ec0db);
+
 }
-code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-		monospace;
-}
+.centered {
+	margin: 0 auto;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  }
+  

@@ -13,7 +13,6 @@ const authSlice = createSlice({
 	},
 	reducers: {
 		login(state, action) {
-			console.log(action)
 			if (
 				state.userProfile.email === action.payload.email &&
 				state.userProfile.password === action.payload.password

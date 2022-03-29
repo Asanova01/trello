@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import titleImage from '../../image/title.png'
 import window from '../../image/window.png'
@@ -6,7 +7,7 @@ import image from '../../image/delete.png'
 
 const TodoModal = ({ active, setActive }) => {
 	if (!active) return null
-	return (
+	return ReactDOM.createPortal(
 		<Modal>
 			<div
 				className={active ? 'modal active' : 'modal'}
@@ -26,7 +27,7 @@ const TodoModal = ({ active, setActive }) => {
 					</p>
 					<div className='block'>
 						<img src={titleImage} alt='' />
-						<p className='description'>Описание</p>
+						<p className='title'>Описание</p>
 					</div>
 					<div className='textarea'>
 						<textarea
@@ -34,14 +35,14 @@ const TodoModal = ({ active, setActive }) => {
 							placeholder='Добавить более подробное описание...'
 						></textarea>
 					</div>
-
 					<div className='add'>
 						<button>Сохранить</button>
 						<img src={image} alt='' onClick={setActive} />
 					</div>
 				</div>
 			</div>
-		</Modal>
+		</Modal>,
+		document.getElementById('portal'),
 	)
 }
 
@@ -57,11 +58,8 @@ const Modal = styled.div`
 		align-items: center;
 		justify-content: center;
 		pointer-events: none;
-		opacity: 0;
-		transition: 0.5s;
 	}
 	.modal.active {
-		opacity: 1;
 		pointer-events: all;
 	}
 	.modalContent {
@@ -72,23 +70,27 @@ const Modal = styled.div`
 		background-color: #f4f5f7;
 		margin-top: 11px;
 	}
-	.description {
-		font-size: 22px;
-		color: #505969;
-	}
 	.title {
 		color: #505969;
 		font-size: 26px;
+		margin-left: 15px;
 	}
 	.block {
 		display: flex;
 		align-items: center;
 		margin-left: 40px;
 	}
-	.textarea {
-		width: 700px;
-		height: 180px;
-		margin-left: 20px;
+	textarea {
+		width: 650px;
+		height: 170px;
+		margin-left: 60px;
+		border: none;
+		outline: none;
+		font-size: 18px;
+		border-radius: 5px;
+		padding: 12px;
+		color: #5e6c84;
+		box-shadow: rgb(0 0 0 / 20%) 1px 4px 5px 2px;
 	}
 	p {
 		font-size: 18px;
@@ -108,6 +110,16 @@ const Modal = styled.div`
 		align-items: center;
 		margin-left: 30px;
 		margin-top: 20px;
+	}
+	button {
+		font-size: 15px;
+		background-color: #0079bf;
+		border: none;
+		border-radius: 5px;
+		color: #fff;
+		width: 160px;
+		height: 40px;
+		margin: 13px;
 	}
 `
 export default TodoModal

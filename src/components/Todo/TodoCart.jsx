@@ -4,13 +4,30 @@ import styled from 'styled-components'
 import { todoUpdate } from '../../store/todos-slice'
 import image from '../../image/delete.png'
 import TodoModal from './TodoModal'
+import { DialogPrompt } from '../Layout/DialogPrompt'
+import { useCallbackPrompt } from '../../hooks/useCallbackPrompt'
 
 const TodoCart = ({ id, tasks, title }) => {
-	const [value, setValue] = useState('')
-	const [showTodo, setShowTodo] = useState(false)
 	const dispatch = useDispatch()
-	const [modalActive, setModalActive] = useState(false)
+	const [value, setValue] = useState('')
 	const [text, setText] = useState('')
+	const [showTodo, setShowTodo] = useState(false)
+	const [modalActive, setModalActive] = useState(false)
+	
+	const [canShowDialogLeavingPage, setCanShowDialogLeavingPage] =
+		useState(false)
+	const [showPrompt, confirmNavigation, cancelNavigation] = useCallbackPrompt(
+		canShowDialogLeavingPage,
+	)
+
+	const inputChangeHandler = (e) => {
+		setText(e.target.value)
+	}
+
+	const inputTaskHandler = (e) => {
+		setValue(e.target.value)
+		setCanShowDialogLeavingPage(true)
+	}
 
 	const addNewTodo = (e) => {
 		e.preventDefault()
@@ -18,56 +35,62 @@ const TodoCart = ({ id, tasks, title }) => {
 			dispatch(todoUpdate({ text: value, id }))
 		}
 		setValue('')
+		setCanShowDialogLeavingPage(false)
 	}
 
-
 	return (
-		<TodoTitle>
-			
-			<form>
-				<input
-					defaultValue={title}
-					onChange={(e) => setText({ title: e.target.value })}
-				/>
-				{!showTodo ? (
-					<p onClick={() => setShowTodo(!showTodo)}>
-						+ Добавить карточку
-					</p>
-				) : (
-					<>
-						<div>
-							{tasks.map((task) => (
-								<div
-									onClick={() => setModalActive(true)}
-									className='cart'
-									key={task.id}
-								>
-									{task.task}
-								</div>
-							))}
-						</div>
-						<TodoModal active={modalActive} setActive={()=>setModalActive(false)} />
-						<textarea
-							placeholder='Ввести заголовок для этой карточки'
-							type='text'
-							value={value}
-							onChange={(e) => setValue(e.target.value)}
-						/>
+		<>
+			<DialogPrompt
+				showDialog={showPrompt}
+				confirmNavigation={confirmNavigation}
+				cancelNavigation={cancelNavigation}
+			/>
 
-						<div className='addcart'>
-							<button onClick={addNewTodo}>
-								Добавить карточку
-							</button>
-							<img
-								src={image}
-								alt=''
-								onClick={() => setShowTodo(!showTodo)}
+			<TodoTitle>
+				<form>
+					<input defaultValue={title} onChange={inputChangeHandler} />
+					{!showTodo ? (
+						<p onClick={() => setShowTodo(!showTodo)}>
+							+ Добавить карточку
+						</p>
+					) : (
+						<>
+							<div>
+								{tasks.map((task) => (
+									<div
+										onClick={() => setModalActive(true)}
+										className='cart'
+										key={task.id}
+									>
+										{task.task}
+									</div>
+								))}
+							</div>
+							<TodoModal
+								active={modalActive}
+								setActive={() => setModalActive(false)}
 							/>
-						</div>
-					</>
-				)}
-			</form>
-		</TodoTitle>
+							<textarea
+								placeholder='Ввести заголовок для этой карточки'
+								type='text'
+								value={value}
+								onChange={inputTaskHandler}
+							/>
+							<div className='addcart'>
+								<button onClick={addNewTodo}>
+									Добавить карточку
+								</button>
+								<img
+									src={image}
+									alt=''
+									onClick={() => setShowTodo(!showTodo)}
+								/>
+							</div>
+						</>
+					)}
+				</form>
+			</TodoTitle>
+		</>
 	)
 }
 const TodoTitle = styled.div`

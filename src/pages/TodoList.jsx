@@ -1,17 +1,21 @@
+import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { createGlobalStyle } from 'styled-components'
-import Todo from './Todo'
-import TodoCart from './TodoCart'
+import Layout from '../components/Layout/Layout'
+import Todo from '../components/Todo/Todo'
+import TodoCart from '../components/Todo/TodoCart'
+
 
 const TodoList = () => {
 	const todos = useSelector((state) => state.todos.columnTodo)
 
+
 	return (
 		<>
 			<GlobalStyle />
+			<Layout />
 			<Block>
-		
 				{todos.map((todo) => (
 					<TodoCart
 						key={todo.id}
@@ -42,4 +46,4 @@ const Block = styled.div`
 	border-radius: 5px;
 	margin-top: 27px;
 `
-export default  TodoList
+export default TodoList
